@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				text-decoration: none;
+			}
+
+			body {
+				font-size: 12px;
+				padding: 0px;
+				margin: 0px;
+			}
+
+			.box {
+				background: #e45050;
+				width: 100%;
+				height: 70px;
+			}
+
+			.box_area {
+				width: 1100px;
+				/* height: 70px; */
+				margin: 0 auto;
+			}
+
+			.logo {
+				width: 260px;
+				float: left;
+			}
+
+			.logo a {
+				float: left;
+			}
+
+			.logo .a1 {
+				background-image: url(img/logo.png);
+				background-position: 0px -3px;
+				width: 160px;
+				height: 70px;
+			}
+
+			.logo .a2 {
+				font-family: 微软雅黑;
+				font-size: 20px;
+				color: #ffffff;
+				margin-top: 10px;
+				margin-left: 10px;
+				text-decoration: none;
+			}
+
+			.logo .a3 {
+				color: #ffb2b2;
+				border: 1px solid #ffb2b2;
+				border-radius: 10px;
+				height: 18px;
+				padding: 0 10px;
+				line-height: 18px;
+				margin-top: 2px;
+				margin-left: 5px;
+				text-decoration: none;
+			}
+
+			.countent {
+				background: #f5f5f5;
+				height: 500px;
+			}
+
+			.countent_area {
+				width: 1100px;
+				/* height: 70px; */
+				margin: 0 auto;
+			}
+
+			#info {
+				width: 905px;
+				/* height: 416px; */
+				border: 1px solid #ddd;
+				color: #333;
+				border-collapse: collapse;
+				margin: 10px auto;
+				/* padding:10px; */
+			}
+
+
+			tr {
+				height: 30px;
+			}
+
+			#info th {
+				background: #e7e7e7;
+				padding: 5px;
+				font-weight: normal;
+			}
+
+			#under .trhead td {
+				padding: 5px;
+			}
+
+			.trhead span.dingdan {
+				width: 200px;
+				display: inline-block;
+			}
+
+			.trhead a {
+				color: #005ea7;
+			}
+
+			.trbody td {
+				border: 1px solid #ddd;
+				text-align: center;
+				padding: 5px;
+			}
+
+			.trbody td.first_td {
+				text-align: left;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 头 -->
+		<div class="box">
+			<div class="box_area">
+				<div class="logo">
+					<a href="#" class="a1"></a>
+					<a href="#" class="a2">我的京东</a>
+					<a href="#" class="a3">返回京东首页</a>
+				</div>
+			</div>
+		</div>
+		<!-- 订单信息 -->
+		<div class="countent">
+			<div class="countent_area">
+				<table id="info" style="width:100%;">
+					<!-- 表格头部 -->
+					<tbody>
+						<tr>
+							<th style="width:50%;">订单信息</th>
+							<th style="width:10%;">收货人</th>
+							<th style="width:10%;">订单金额</th>
+							<th style="width:10%;">
+								<select id="timer">
+									<option value="最近三个月">最近三个月</option>
+									<option value="2019年">2019年</option>
+									<option value="2014年">2014年</option>
+									<option value="2013年">2013年</option>
+									<option value="2012年">2012年</option>
+									<option value="2012年以前">2012年以前</option>
+								</select>
+							</th>
+							<th style="width:10%;">
+								<select id="Status">
+									<option value="全部状态">全部状态</option>
+									<option value="已付款">已付款</option>
+									<option value="等待收货">等待收货</option>
+									<option value="已下单">已下单</option>
+									<option value="已下单">已完成</option>
+									<option value="已取消">已取消</option>
+								</select>
+							</th>
+							<th style="width:10%;">操作</th>
+						</tr>
+					</tbody>
+					<!-- 订单信息 -->
+					<tbody id="under" style="width:100%;">
+						<!-- 渲染信息 -->
+						<!-- <tr class="trhead">
+							<td colspan="6">
+								<span class="dingdan">订单编号: 9545709796</span>
+								<span>
+									<a href="#">BROWNE FOX旗舰店</a>
+								</span>
+							</td>
+						</tr>
+						<tr class="trbody">
+							<td class="first_td">
+								<div class="imgs">
+									<a href="#">
+										<img src="" alt="">
+									</a>
+									<a href="#">
+										<img src="" alt="">
+									</a>
+								</div>
+							</td>
+							<td>aaa</td>
+							<td>21.90 <br> 在线支付</td>
+							<td>2019-4-30 <br> 13:40:20 </td>
+							<td>等待收货</td>
+							<td>
+								<a href="#">查看</a><br>
+								<a href="#">确认收货</a><br>
+								<a href="#">取消订单</a><br>
+							</td>
+						</tr> -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+		<script>
+			$.ajax({
+				url: "data.json",
+				dataType: "json",
+				success: function(data) {
+					console.log(data);
+
+					xr(data) //初始化
+
+					//筛选状态
+					$("#Status").change(function() {
+						var type = $(this).find("option:selected").text();
+						// console.log(type)
+						if (type == '全部状态') {
+							xr(data)
+						} else {
+							xr(getType(type));
+							console.log(type)
+						}
+					})
+
+					function getType(type) {
+						return $(data).filter(function(idx, item) {
+							console.log(getState(item.order_state));
+							return getState(item.order_state) == type;
+						})
+					}
+
+					//筛选时间
+					$("#timer").change(function() {
+						var types = $('#timer').val();
+						console.log(types)
+						if (types == "2014年" || "2013年" || "2012年") {
+							xr(gatDate(types))
+							console.log($(data))
+						}
+					})
+
+					function gatDate(types) {
+						return $(data).filter(function(index, item) {
+							return item.submit_time.slice(0, 4) + "年" == types
+						})
+					}
+
+					//渲染
+					function xr(str) {
+						$("#under").html('')
+						$.each(str, function(index, item) {
+							//时间处理
+							var time = item.submit_time;
+							var time1 = time.split("T");
+							console.log(time1); // ["2014-5-10", "15:20:20"]
+							var time2 = time1.slice(1)
+							console.log(time2); //["9:14:20"]
+							var time3 = time1.slice(0, 1);
+							console.log(time3) //["2012-04-23"]
+
+							var arr =
+								`
+							<tr class="trhead">
+								<td colspan="6">
+									<span class="dingdan">订单编号:${item.order_num}</span>
+									<span>
+										<a href="#">${item.shop_name}</a>
+									</span>
+								</td>
+							</tr>
+							<tr class="trbody">
+								<td class="first_td">
+									
+								</td>
+								<td>${item.user_name}</td>
+								<td>${item.price} <br> ${item.payment_mode}</td>
+								<td>${time3}<br>${time2}</td>
+								<td>${getState(item.order_state)}</td>
+								<td>
+									<a href="#">查看 </a><br>
+									<a href="javascript:confirm('确定收货吗？')">确认收货 </a><br>
+									<a href="javascript:confirm('确定删除订单？')">取消订单</a><br>
+								</td>
+							</tr>
+						`
+							$("#under").append(arr)
+							//图片处理
+							$.each(item.products, function(i, aa) {
+								var div = $("<div>");
+								div.attr("class", "imgs");
+								div.html(
+									`
+								<a href="${aa.product_url}">
+									<img src="${aa.product_img}">
+								</a>
+
+							`).appendTo(
+									$(".first_td").eq(index))
+							})
+
+						})
+
+					}
+				},
+
+			})
+
+			function getState(state) {
+				switch (state) {
+					case "0":
+						return "已下单";
+					case "1":
+						return "已付款";
+					case "2":
+						return "等待收货";
+					case "3":
+						return "已完成";
+					case "4":
+						return "已取消";
+				}
+			}
+		</script>
+	</body>
+</html>
